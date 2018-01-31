@@ -1,8 +1,9 @@
-
-from cars_detector.cars_cropper import CarsCropper
-from cars_detector.cars_cropper import GetFolders
-from get_plates import 	PlateRecognition
 import argparse
+import datetime
+from cars_cropper import CarsCropper
+from cars_cropper import GetFolders
+from get_plates import 	PlateRecognition
+
 
 
 
@@ -17,21 +18,21 @@ if __name__ == '__main__':
 
 	# If -folder flag is set, path_to_clean = <-folder flab>
 	if args.cleanFolder != None:
-		home_dir = os.getenv('HOME')
-		today_date = datetime.datetime.now().strftime('%Y-%m-%d')
-		path_to_folder = home_dir + '/' + args.cleanFolder
+		path_to_folder = args.cleanFolder
 
 	# Else it will search for the todays report and set path_to_clean to actual day
 	else:
-		home_dir = os.getenv('HOME')
+		
 		today_date = datetime.datetime.now().strftime('%Y-%m-%d')
-		path_to_folder =  home_dir + '/' + today_date + '_reporte'
+		path_to_folder =  today_date + '_reporte'
 
 	get_folders 	= GetFolders()
 	cars_cropper    = CarsCropper()
 
+	print(path_to_folder)
 	# Cut the cars in image
 	folders_to_work = get_folders(path_to_folder)
+	print('folders to work', folders_to_work)
 	for folder in folders_to_work:
 		cars_cropper(path_to_images_dir = folder)
 

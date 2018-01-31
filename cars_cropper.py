@@ -128,7 +128,6 @@ class GetFolders():
 
     def __call__(self, work_in_folder):
         path_to_work_folder = os.getenv('HOME') + '/' + work_in_folder  + '/*'
-
         """
             Get a list of the clean folders (usefull)
             , folders with jpg's and avi in folder

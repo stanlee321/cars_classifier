@@ -144,7 +144,7 @@ class PlateRecognition():
 			possible_plates = PlateRecognition.get_plates(result_pandas_df)
 
 			# Working on the max confidence
-			prob 			= possible_plates[0]['confidence']
+			prob   			= possible_plates[0]['confidence']
 			prob 			= str(round(float(prob)/100, 2))
 			plate 			= possible_plates[0]['plate']			
 			possible_region = PlateRecognition.get_plate_region(result_pandas_df)
@@ -165,6 +165,7 @@ class PlateRecognition():
 			print('1.- Working in folder:', folder)
 			images = self.check_folder(folder,'png')
 			for image in images:
+				print('IMAGE IS...INTO............', image)
 				information =  PlateRecognition.get_information_of_images(image)
 				if len(information)>1:
 					print('2.- Working in image: ', image)
@@ -190,6 +191,7 @@ class PlateRecognition():
 				else:
 					print(information)
 				# Close coneccions
+		print('STARGING RENAMING...')
 		print('STARING RENANaming...')
 		db_info = PlateRecognition.leer_DB(path_to_db)
 		for row in db_info[0]:
