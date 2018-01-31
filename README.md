@@ -2,10 +2,10 @@
 
 An object recognition application using [Google's TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/object_detection) and [OpenCV](http://opencv.org/).
 Part of this code was inspired by Sentdex [Determining other vehicle distances and collision warning - Self Driving Cars in GTA](https://pythonprogramming.net/detecting-distances-self-driving-car/)
-The part of plate recognition is made of by the use of OpenALP API free tier in [Automatic License Plate Recognition library](https://github.com/openalpr/openalpr) . I'm working on my own deep learning implementation that removes the use of this api and replaces by this deeplearning model.
+The part of plate recognition is made of by the use of OpenALPR API free tier in [Automatic License Plate Recognition library](https://github.com/openalpr/openalpr) . I'm working on my own deep learning implementation that removes the use of this api and replaces by this deeplearning model.
 
 ## Getting Started
-1. `pip3 install -r requierements.txt`
+1. `pip3 install -r requirements.txt`
 2. `python3 main.py` 
     Optional arguments (default value):
     * Device index of the camera `-folder= <route to the root folder of folders -/home/user/PATH TO YOUR CAR IMAGES'`
