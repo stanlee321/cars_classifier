@@ -95,7 +95,7 @@ class CarsCropper():
                                 punto_1 = (x0,y0)
                                 punto_2 = (x1,y1)
                                 caja    = [punto_1, punto_2]
-                                if A > 100000:
+                                if A > 80000:
                                     areas.append(A)
                                     bounding.append(caja)
                                 else:
@@ -144,6 +144,7 @@ class GetFolders():
 if __name__ == '__main__':
     folders_caller  = GetFolders()
     cars_cropper    = CarsCropper()
+    
     folders_to_work = folders_caller('red')
     for folder in folders_to_work:
         print(folder)

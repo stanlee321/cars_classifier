@@ -145,6 +145,7 @@ class PlateRecognition():
 
 			# Working on the max confidence
 			prob 			= possible_plates[0]['confidence']
+			prob 			= str(round(float(prob)/100, 2))
 			plate 			= possible_plates[0]['plate']			
 			possible_region = PlateRecognition.get_plate_region(result_pandas_df)
 			region 			= possible_region
@@ -167,7 +168,7 @@ class PlateRecognition():
 				information =  PlateRecognition.get_information_of_images(image)
 				if len(information)>1:
 					print('2.- Working in image: ', image)
-					path = image.split('/')
+					path 	= image.split('/')
 
 					old_folder_path = '/'.join(path[0:5]) + '/'
 					old_folder_name = path[3]
@@ -183,7 +184,7 @@ class PlateRecognition():
 					
 					# record the full log from JSON in a npy
 					np.save(old_folder_path + '{}.npy'.format(image_name), full_data)
-					
+
 					# Commit information to DB
 					PlateRecognition.dynamic_data_entry(path_to_db, dtime, old_folder_path, image_name, plate, prob)
 				else:
@@ -199,7 +200,9 @@ class PlateRecognition():
 			except:
 				print('This dude dont exist', row[0])
 
+
 if __name__ == '__main__':
+
 	folder = 'red'
 	platereko = PlateRecognition()
 	platereko(folder)
