@@ -11,6 +11,7 @@ from pandas.io.json import json_normalize
 import ast
 import sqlite3
 import shutil
+import scipy.misc
 
 class PlateRecognition():
 	def __init__(self, folder='red'):
@@ -121,7 +122,8 @@ class PlateRecognition():
 		img = cv2.rectangle(img,(px0,py0),(px1,py1),(0,255,0),3)
 		img = cv2.putText(img, plate,(textx,int(texty*0.95)), font, 1,(0,255,3),2,cv2.LINE_AA)
 		save_in = folder_to_save + "{}_rekogn.jpg".format(image_name)
-		cv2.imwrite(save_in, img)
+		scipy.misc.imsave(save_in, img)
+		#cv2.imwrite(save_in, img)
 
 	@staticmethod
 	def get_information_of_images(image):
@@ -156,15 +158,15 @@ class PlateRecognition():
 		path_to_db 			= os.getenv('HOME') + '/WORKDIR' + '/' +'rename_{}.db'.format(work_in_folder)
 		# Create DB for this case:
 		PlateRecognition.create_db(path_to_db)
-
 		folders = self.get_folders(path_to_folders)
+
 		for folder in folders:
-			print('Working in folder:', folder)
-			images = self.check_folder(folder,'jpg')
+			print('1.- Working in folder:', folder)
+			images = self.check_folder(folder,'png')
 			for image in images:
-				print('Working in image: ', image)
 				information =  PlateRecognition.get_information_of_images(image)
 				if len(information)>1:
+					print('2.- Working in image: ', image)
 					path = image.split('/')
 
 					old_folder_path = '/'.join(path[0:5]) + '/'
@@ -201,9 +203,3 @@ if __name__ == '__main__':
 	folder = 'red'
 	platereko = PlateRecognition()
 	platereko(folder)
-
-
-	#platereko.get_json_from_api(demo)
-	#information = platereko.get_information_of_images(demo)
-	#region, prob, plate, full_data = information[0], information[1], information[2], information[3] 
-	#platereko.write_plate(demo, region)
