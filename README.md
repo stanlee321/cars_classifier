@@ -17,8 +17,8 @@ The part of plate recognition is made of by the use of OpenALPR API free tier in
 - [scypy] (for write the images into disk)
 
 ## Notes
-- Moving the `.read()` part of the video stream in a multiple child processes did not work. However, it was possible to move it to a separate thread.
-
+- Work in progress...
 ## Copyright
 See [LICENSE](LICENSE) for details.
-Copyright (c) 2017 [Dat Tran](http://www.dat-tran.com/).
+
+Copyright (c) 2018 [stanlee321](http://deepmicrosystems.com/).
