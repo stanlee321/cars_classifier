@@ -59,69 +59,72 @@ class CarsCropper():
         with self.detection_graph.as_default():
             with tf.Session(graph=self.detection_graph) as sess:
                 for image_path in TEST_IMAGE_PATHS:
-                    print('1.- Creaing Inference .... IMAGE to feed IS:', image_path)
-                    image               = Image.open(image_path)
-                    # the array based representation of the image will be used later in order to prepare the
-                    # result image with boxes and labels on it.
-                    image_np            = CarsCropper.load_image_into_numpy_array(image)
-                    # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-                    image_np_expanded   = np.expand_dims(image_np, axis=0)
-                    image_tensor        = self.detection_graph.get_tensor_by_name('image_tensor:0')
-                    # Each box represents a part of the image where a particular object was detected.
-                    boxes               = self.detection_graph.get_tensor_by_name('detection_boxes:0')
-                    # Each score represent how level of confidence for each of the objects.
-                    # Score is shown on the result image, together with the class label.
-                    scores              = self.detection_graph.get_tensor_by_name('detection_scores:0')
-                    classes             = self.detection_graph.get_tensor_by_name('detection_classes:0')
-                    num_detections      = self.detection_graph.get_tensor_by_name('num_detections:0')
-                    # Actual detection.
-                    (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],feed_dict={image_tensor: image_np_expanded})
+                    try:
+                        print('1.- Creaing Inference .... IMAGE to feed IS:', image_path)
+                        image               = Image.open(image_path)
+                        # the array based representation of the image will be used later in order to prepare the
+                        # result image with boxes and labels on it.
+                        image_np            = CarsCropper.load_image_into_numpy_array(image)
+                        # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                        image_np_expanded   = np.expand_dims(image_np, axis=0)
+                        image_tensor        = self.detection_graph.get_tensor_by_name('image_tensor:0')
+                        # Each box represents a part of the image where a particular object was detected.
+                        boxes               = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+                        # Each score represent how level of confidence for each of the objects.
+                        # Score is shown on the result image, together with the class label.
+                        scores              = self.detection_graph.get_tensor_by_name('detection_scores:0')
+                        classes             = self.detection_graph.get_tensor_by_name('detection_classes:0')
+                        num_detections      = self.detection_graph.get_tensor_by_name('num_detections:0')
+                        # Actual detection.
+                        (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],feed_dict={image_tensor: image_np_expanded})
 
-                    areas = []
-                    bounding = []
-                    for i,b in enumerate(boxes[0]):
-                        #        person  1       car    3                bus   6               truck   8
-                        if classes[0][i] == 3 or classes[0][i] == 6 or classes[0][i] == 8:
-                            if scores[0][i] >= 0.6:
-            
-                                x0 = int(boxes[0][i][3]*image_np.shape[1])
-                                y0 = int(boxes[0][i][2]*image_np.shape[0])
+                        areas = []
+                        bounding = []
+                        for i,b in enumerate(boxes[0]):
+                            #        person  1       car    3                bus   6               truck   8
+                            if classes[0][i] == 3 or classes[0][i] == 6 or classes[0][i] == 8:
+                                if scores[0][i] >= 0.5:
+                
+                                    x0 = int(boxes[0][i][3]*image_np.shape[1])
+                                    y0 = int(boxes[0][i][2]*image_np.shape[0])
 
-                                x1 = int(boxes[0][i][1]*image_np.shape[1])
-                                y1 = int(boxes[0][i][0]*image_np.shape[0])
+                                    x1 = int(boxes[0][i][1]*image_np.shape[1])
+                                    y1 = int(boxes[0][i][0]*image_np.shape[0])
 
-                                #area
-                                A       = (x1 - x0) * (y1 - y0)
-                                punto_1 = (x0,y0)
-                                punto_2 = (x1,y1)
-                                caja    = [punto_1, punto_2]
-                                if A > 80000:
-                                    areas.append(A)
-                                    bounding.append(caja)
-                                else:
-                                    pass
-                    info = dict(zip(areas, bounding))
-                    if len(info) > 0:
-                        # Get the maximun area box
-                        max_key = max(info, key=info.get)
+                                    #area
+                                    A       = (x1 - x0) * (y1 - y0)
+                                    punto_1 = (x0,y0)
+                                    punto_2 = (x1,y1)
+                                    caja    = [punto_1, punto_2]
+                                    if A > 80000:
+                                        areas.append(A)
+                                        bounding.append(caja)
+                                    else:
+                                        pass
+                        info = dict(zip(areas, bounding))
+                        if len(info) > 0:
+                            # Get the maximun area box
+                            max_key = max(info, key=info.get)
 
-                        cajita = info[max_key]
-                        punto_a, punto_b = cajita[0], cajita[1]
-                        
-                        x0 = punto_a[0]
-                        y0 = punto_a[1]
+                            cajita = info[max_key]
+                            punto_a, punto_b = cajita[0], cajita[1]
+                            
+                            x0 = punto_a[0]
+                            y0 = punto_a[1]
 
-                        x1 = punto_b[0]
-                        y1 = punto_b[1]
+                            x1 = punto_b[0]
+                            y1 = punto_b[1]
 
-                        imagen_cropped  = image_np[y1:y0, x1:x0]
+                            imagen_cropped  = image_np[y1:y0, x1:x0]
 
-                        image_name      = image_path.split('/')[-1][-6:-4]
-                        imagen_path     = PATH_TO_IMAGES_DIR+'/croped_from_{}.png'.format(image_name)
-                        print('###### 2.- Saving image in....:', imagen_path)
-                        scipy.misc.imsave(imagen_path, imagen_cropped)
-                    else:
-                        print('>>>>>> 3.- EMPTY IMAGE, passinng...')
+                            image_name      = image_path.split('/')[-1][-8:-6]
+                            imagen_path     = PATH_TO_IMAGES_DIR+'/croped_from_{}.png'.format(image_name)
+                            print('###### 2.- Saving image in....:', imagen_path)
+                            scipy.misc.imsave(imagen_path, imagen_cropped)
+                        else:
+                            print('>>>>>> 3.- EMPTY IMAGE, passinng...')
+                    except Exception as e:
+                        print('This image {} is corrupt or {},'.format(image_path,e))
 
 
 class GetFolders():

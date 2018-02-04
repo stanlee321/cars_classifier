@@ -8,7 +8,7 @@ The part of plate recognition is made of by the use of OpenALPR API free tier in
 1. `pip3 install -r requirements.txt`
 2. `python3 main.py` 
     Optional arguments (default value a folder with todays date):
-    * Folder to workon `-folder= <route to the root folder of folders -/home/user/PATH TO YOUR CAR IMAGES'`
+    * Folder to workon `-folder= <YOUR FOLDER of folders>'`
 
 ## Requirements
 - [Python 3.5](https://www.continuum.io/downloads)
