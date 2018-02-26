@@ -9,8 +9,6 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
 
-
-
 class CarsCropper():
     def __init__(self):
         CWD_PATH        = os.getcwd()
@@ -83,7 +81,7 @@ class CarsCropper():
                         for i,b in enumerate(boxes[0]):
                             #        person  1       car    3                bus   6               truck   8
                             if classes[0][i] == 3 or classes[0][i] == 6 or classes[0][i] == 8:
-                                if scores[0][i] >= 0.5:
+                                if scores[0][i] >= 0.4:
                 
                                     x0 = int(boxes[0][i][3]*image_np.shape[1])
                                     y0 = int(boxes[0][i][2]*image_np.shape[0])
@@ -96,12 +94,14 @@ class CarsCropper():
                                     punto_1 = (x0,y0)
                                     punto_2 = (x1,y1)
                                     caja    = [punto_1, punto_2]
-                                    if A > 80000:
+                                    #print('AREA IS', A)
+                                    if A > 85000:
                                         areas.append(A)
                                         bounding.append(caja)
                                     else:
                                         pass
                         info = dict(zip(areas, bounding))
+                        print('INFO IS', len(info))
                         if len(info) > 0:
                             # Get the maximun area box
                             max_key = max(info, key=info.get)
@@ -115,12 +115,10 @@ class CarsCropper():
                             x1 = punto_b[0]
                             y1 = punto_b[1]
 
-                            imagen_cropped  = image_np[y1:y0, x1:x0]
-
-                            image_name      = image_path.split('/')[-1][-8:-6]
-                            imagen_path     = PATH_TO_IMAGES_DIR+'/croped_from_{}.png'.format(image_name)
-                            print('###### 2.- Saving image in....:', imagen_path)
-                            scipy.misc.imsave(imagen_path, imagen_cropped)
+                            img_cropped  = image_np[y1:y0, x1:x0]
+                            img_name     = image_path.split('/')[-1][0:-4]
+                            img_path     = PATH_TO_IMAGES_DIR+'/croped_from_{}.png'.format(img_name)
+                            scipy.misc.imsave(img_path, img_cropped)
                         else:
                             print('>>>>>> 3.- EMPTY IMAGE, passinng...')
                     except Exception as e:
@@ -147,7 +145,7 @@ if __name__ == '__main__':
     folders_caller  = GetFolders()
     cars_cropper    = CarsCropper()
     
-    folders_to_work = folders_caller('red')
+    folders_to_work = folders_caller('2018-01-30_reporte')
     for folder in folders_to_work:
         print(folder)
         cars_cropper(path_to_images_dir = folder)
